@@ -1,6 +1,6 @@
 {
   "tasks": {
-    "dev": "deno run -A --watch main.tsx"
+    "dev": "watch autoreload=true deno run -A main.tsx"
   },
   "lint": {
     "rules": {
