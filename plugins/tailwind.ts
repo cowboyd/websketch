@@ -3,14 +3,14 @@ import { join } from "jsr:@std/path";
 import { crypto } from "jsr:@std/crypto";
 import { encodeHex } from "jsr:@std/encoding/hex";
 import { x } from "jsr:@effection-contrib/tinyexec";
-import { call } from "effection";
+import { call, Operation } from "effection";
 
 export interface TailwindOptions {
   readonly input: string;
   readonly outdir: string;
 }
 
-export function* useTailwind(options: TailwindOptions) {
+export function* useTailwind(options: TailwindOptions): Operation<string> {
   let { input, outdir } = options;
   let outpath = join(outdir, input);
   let proc = yield* x("deno", [

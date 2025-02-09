@@ -13,7 +13,7 @@
     "jsxImportSource": "revolution"
   },
   "imports": {
-    "effection": "npm:effection@3.1.0",
+    "effection": "npm:effection@3.2.0",
     "tailwindcss": "npm:tailwindcss@^4.0.0",
     "@std/bdd": "jsr:@std/bdd",
     "revolution": "https://deno.land/x/revolution@0.6.0/mod.ts",

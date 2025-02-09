@@ -24,6 +24,7 @@
     "npm:@types/node@*": "22.5.4",
     "npm:effection@3.0.3": "3.0.3",
     "npm:effection@3.1.0": "3.1.0",
+    "npm:effection@3.2.0": "3.2.0",
     "npm:hast-util-select@*": "6.0.3",
     "npm:hast-util-to-html@9.0.0": "9.0.0",
     "npm:notyf@*": "3.10.0",
@@ -446,6 +447,9 @@
     },
     "effection@3.1.0": {
       "integrity": "sha512-kJBLnGPbwXpngo5Ov51QeO3ikUugfGmKT1dtfCNptUAWZqS1JW7etmZgdSBfm8l4caO1oy111CoBikuBmgz2pQ=="
+    },
+    "effection@3.2.0": {
+      "integrity": "sha512-YTvNdgJg9SQ5z4Q8ZgtNcifr1lrSe4qlxwupYLwsdIVXw1LBymrgryU1E5p7Ii1OUZREuGqhq/ljfaxS85olfQ=="
     },
     "emoji-regex@8.0.0": {
       "integrity": "sha512-MSjYzcWNOA0ewAHpz0MxpYFvwg6yjy1NG3xteoqz644VCo/RPgnr1/GGt+ic3iJTzQ8Eu3TdM14SawnVUmGE6A=="
@@ -1422,7 +1426,7 @@
   "workspace": {
     "dependencies": [
       "jsr:@std/bdd@*",
-      "npm:effection@3.1.0",
+      "npm:effection@3.2.0",
       "npm:tailwindcss@4"
     ]
   }

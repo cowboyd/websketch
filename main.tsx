@@ -23,7 +23,7 @@ await main(function* () {
             </head>
             <body>
               <h1 class="text-3xl font-bold underline">
-                Hello world!
+                Hello World
               </h1>
             </body>
           </html>
@@ -32,7 +32,7 @@ await main(function* () {
       route("/build(.*)", assetRoute("build")),
     ],
     plugins: [
-      autoreloadPlugin({ enabled: !!Deno.env.get("autoreload") }),
+      yield* autoreloadPlugin({ enabled: !!Deno.env.get("autoreload") }),
     ],
   });
 
