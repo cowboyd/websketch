@@ -2,7 +2,7 @@ import { main, suspend } from "effection";
 import { createRevolution, route } from "revolution";
 import { useTailwind } from "./plugins/tailwind.ts";
 import { assetRoute } from "./plugins/asset-route.ts";
-import { autoreloadPlugin } from "./plugins/autoreload.ts";
+import { autoreloadPlugin } from "./plugins/autoreload.tsx";
 
 await main(function* () {
   let css = yield* useTailwind({ input: "main.css", outdir: "build" });

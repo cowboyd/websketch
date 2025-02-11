@@ -36,6 +36,18 @@ export function* autoreloadPlugin(
       }
       let body = select("body", html);
       assert(body, "returned html node without a <head> element");
+      body.children.unshift(
+	//@ts-expect-error hast types aren't quite right
+        <header
+          id="autoreload-banner"
+          style="position: absolute; top: 0; left: 0; width: 100%; background-color: rgba(0, 133, 242, 0.1) ; color: rgb(78, 78, 78); text-align: center; height: 0"
+        >
+          <section
+            id="autoreload-banner-text"
+            style="padding-top: .3em; padding-bottom: .3em;"
+          />
+        </header>,
+      );
       body.children.push({
         type: "element",
         tagName: "script",
@@ -50,45 +62,59 @@ export function* autoreloadPlugin(
     http: [
       route("/autoreload.js", function* () {
         let script = `
-import { main, on, once, each, spawn, createChannel, suspend } from "https://esm.run/effection@3";
+import { main, on, once, each, spawn, createChannel, sleep, suspend } from "https://esm.run/effection@3";
 
 await main(function*() {
+  let banner = document.getElementById("autoreload-banner");
+  let text = document.getElementById("autoreload-banner-text");
   let states = createChannel();
   let source = new EventSource("/autoreload");
 
+  let show = (message) => {
+    text.innerText = message;
+    banner.style.height = "auto";
+  };
+
+  let hide = () => {
+    banner.style.height = 0;
+  }
+
+  let connected = true;
+
   yield* spawn(function*() {
     for (let message of yield* each(on(source, "open"))) {
-      yield* states.send({ status: "connected" });
+      connected = true;
       yield* each.next();
     }
   });
 
   yield* spawn(function*() {
     for (let message of yield* each(on(source, "error"))) {
-      yield* states.send({ status: "disconnected" });
+      connected = false;
       yield* each.next();
     }
   });
 
   yield* spawn(function*() {
     for (let message of yield* each(on(source, "message"))) {
-      yield* states.send({ status: "restarting" });
+      show("reloading...");
+      yield* spawn(function*() {
+        yield* sleep(5000);
+        while (true) {
+          if (!connected) {
+            show("error: disconnected from server");
+          }
+          yield* sleep(1000);
+        }
+      });
       yield* once(source, "open");
       location.reload();
       yield* each.next();
     }
   });
 
-  yield* spawn(function*() {
-    for (let state of yield* each(states)) {
-      console.log(state);
-      yield* each.next();
-    }
-  });
-
   yield* suspend();
-})
-
+});
 `;
         return new Response(script, {
           status: 200,
