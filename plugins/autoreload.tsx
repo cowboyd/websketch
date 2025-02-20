@@ -62,12 +62,11 @@ export function* autoreloadPlugin(
     http: [
       route("/autoreload.js", function* () {
         let script = `
-import { main, on, once, each, spawn, createChannel, sleep, suspend } from "https://esm.run/effection@3";
+import { main, on, once, each, spawn, createChannel, sleep, suspend, withResolvers } from "https://esm.run/effection@3";
 
 await main(function*() {
   let banner = document.getElementById("autoreload-banner");
   let text = document.getElementById("autoreload-banner-text");
-  let states = createChannel();
   let source = new EventSource("/autoreload");
 
   let show = (message) => {
@@ -79,41 +78,22 @@ await main(function*() {
     banner.style.height = 0;
   }
 
-  let connected = true;
+  let messages = yield* on(source, "message");
+
+  // the first message is where we connect
+  let next = yield* messages.next();
+
+  // the next is where a restart is happening.
+  next = yield* messages.next();
 
   yield* spawn(function*() {
-    for (let message of yield* each(on(source, "open"))) {
-      connected = true;
-      yield* each.next();
-    }
+    yield* sleep(5000);
+    show("error: disconnected from server");
   });
 
-  yield* spawn(function*() {
-    for (let message of yield* each(on(source, "error"))) {
-      connected = false;
-      yield* each.next();
-    }
-  });
-
-  yield* spawn(function*() {
-    for (let message of yield* each(on(source, "message"))) {
-      show("reloading...");
-      yield* spawn(function*() {
-        yield* sleep(5000);
-        while (true) {
-          if (!connected) {
-            show("error: disconnected from server");
-          }
-          yield* sleep(1000);
-        }
-      });
-      yield* once(source, "open");
-      location.reload();
-      yield* each.next();
-    }
-  });
-
-  yield* suspend();
+  // we should get another connect message, and we're done.
+  next = yield* messages.next();
+  location.reload();
 });
 `;
         return new Response(script, {
@@ -138,10 +118,11 @@ await main(function*() {
           let controller = yield* started.operation;
           let cancellation = false;
           try {
+	    controller.enqueue({ data: "connect"});
             cancellation = yield* canceled.operation;
           } finally {
             if (!cancellation) {
-              controller.enqueue({ data: "close" });
+              controller.enqueue({ data: "disconnect" });
               controller.close();
             }
           }
