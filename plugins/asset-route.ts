@@ -1,4 +1,4 @@
-import { serveDirMiddleware, type HTTPMiddleware } from "revolution";
+import { type HTTPMiddleware, serveDirMiddleware } from "revolution";
 
 export function assetRoute(dir: string): HTTPMiddleware {
   return serveDirMiddleware({

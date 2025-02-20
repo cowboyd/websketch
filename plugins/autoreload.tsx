@@ -1,13 +1,10 @@
-import { drive, RevolutionPlugin, route, sse } from "revolution";
+import { RevolutionPlugin, route } from "revolution";
 import { select } from "npm:hast-util-select";
 import { assert } from "jsr:@std/assert";
 import {
   createContext,
   Operation,
   Scope,
-  sleep,
-  spawn,
-  Task,
   useScope,
   withResolvers,
 } from "effection";
@@ -37,7 +34,7 @@ export function* autoreloadPlugin(
       let body = select("body", html);
       assert(body, "returned html node without a <head> element");
       body.children.unshift(
-	//@ts-expect-error hast types aren't quite right
+        //@ts-expect-error hast types aren't quite right
         <header
           id="autoreload-banner"
           style="position: absolute; top: 0; left: 0; width: 100%; background-color: rgba(0, 133, 242, 0.1) ; color: rgb(78, 78, 78); text-align: center; height: 0"
@@ -119,7 +116,7 @@ await main(function*() {
           let controller = yield* started.operation;
           let cancellation = false;
           try {
-	    controller.enqueue({ data: "connect"});
+            controller.enqueue({ data: "connect" });
             cancellation = yield* canceled.operation;
           } finally {
             if (!cancellation) {

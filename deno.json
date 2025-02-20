@@ -17,8 +17,7 @@
     "tailwindcss": "npm:tailwindcss@^4.0.0",
     "@std/bdd": "jsr:@std/bdd",
     "revolution": "https://deno.land/x/revolution@0.6.0/mod.ts",
-    "revolution/jsx-runtime": "https://deno.land/x/revolution@0.6.0/jsx-runtime.ts"  
+    "revolution/jsx-runtime": "https://deno.land/x/revolution@0.6.0/jsx-runtime.ts"
   },
   "nodeModulesDir": "auto"
 }
-
