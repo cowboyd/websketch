@@ -87,6 +87,7 @@ await main(function*() {
   next = yield* messages.next();
 
   yield* spawn(function*() {
+    show("reloading...");
     yield* sleep(5000);
     show("error: disconnected from server");
   });
